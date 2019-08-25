@@ -29,6 +29,7 @@ class Wall extends Rect {
     super(start, end);
   }
   void show() {
+    strokeWeight(4);
     line(o.x, o.y, d.x, d.y);
   }
   void updatePosition(float x1, float y1, float x2, float y2){
@@ -61,6 +62,7 @@ class Ray extends Rect {
     cosd = d.y;
   }
   void show() {
+    strokeWeight(1);
     line(o.x, o.y, endpoint.x, endpoint.y); 
   }
   void updatePosition(float x, float y) {
