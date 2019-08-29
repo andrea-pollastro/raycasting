@@ -55,6 +55,8 @@ class Ray extends Rect {
   float cosd;
   //endpoint point
   PVector endpoint = new PVector();
+  //intersection points
+  float x, y, v1_x, v1_y, v2_x, v2_y;
 
   Ray(PVector o, float degree) {
     super(o, new PVector(sin(radians(degree)), cos(radians(degree))));
@@ -94,15 +96,25 @@ class Ray extends Rect {
   void cast(Wall wall) {
     if (!areParallel(wall)) {
       //solving system of equations
-      float x = (wall.q - q)/(m - wall.m);
-      float y = m*x + q;
+      if(wall.m == 0){  //parallel to y = 0
+        y = wall.q;
+        x = (y-q)/m;
+      }
+      else{
+        if(wall.m == Float.POSITIVE_INFINITY || wall.m == Float.NEGATIVE_INFINITY) //parallel to x = 0
+          x = -wall.c/wall.a;
+        else
+          x = (wall.q - q)/(m - wall.m);
+        y = m*x + q;
+      }
+      
       //getting vector pointing from o to d and centered into the origin
-      float v1_x = o.x - endpoint.x;
-      float v1_y = o.y - endpoint.y;
+      v1_x = o.x - endpoint.x;
+      v1_y = o.y - endpoint.y;
       if (wall.inRange(x,y) && isOnDirection(x,y)){
         //getting vector pointing to the new position and centered into the origin
-        float v2_x = o.x - x;
-        float v2_y = o.y - y;
+        v2_x = o.x - x;
+        v2_y = o.y - y;
         //if is closer to the origin position, the values are updated
         if(magnitude(v2_x, v2_y) < magnitude(v1_x, v1_y)) 
           endpoint.set(x, y);
